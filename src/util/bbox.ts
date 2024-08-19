@@ -2,6 +2,7 @@ import { createMemo, untrack } from "solid-js";
 import { maybeAdd, maybeDiv, maybeMax, maybeMin, maybeSub } from "./maybe";
 import { createStore, produce } from "solid-js/store";
 import { BBoxOwners, Id, Inferred, inferred } from "../scenegraph";
+import { Boundary } from "../boundary";
 
 export type Dim =
   | "left"
@@ -76,6 +77,23 @@ export const from = (bboxes: BBox[]): BBox => {
     width,
     height,
   };
+};
+
+export const fromBoundary = (boundary: Boundary) => {
+  const { vertices } = boundary;
+
+  if (vertices.length === 0) {
+    return {};
+  }
+
+  const bboxes = vertices.map((vertex) => ({
+    left: vertex.x,
+    top: vertex.y,
+    right: vertex.x,
+    bottom: vertex.y,
+  }));
+
+  return from(bboxes);
 };
 
 // The coefficients for the linear equations that define the bounding box dimensions in terms of
